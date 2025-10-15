@@ -1,6 +1,7 @@
 package com.los_pitufs.los_pitufs.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -24,9 +25,39 @@ public class UserService {
         .toList();
     }
 
+    public Optional<UserDTO> buscarUsuarioPorID(Long id) {
+        return userRepository.findById(id).map(this::toDTO);
+    }
+
     public UserDTO criarUsuario(User user) {
         User usuarioSalvo = userRepository.save(user);
         return toDTO(usuarioSalvo);
+    }
+
+    public UserDTO atualizarUsuario(Long id, User updatedUser) {
+        return userRepository.findById(id)
+        .map( user -> {
+            user.setUsername(updatedUser.getUsername());
+            user.setPassword(updatedUser.getPassword());
+            user.setEmail(updatedUser.getEmail());
+            user.setBio(updatedUser.getBio());
+            user.setBirthDate(updatedUser.getBirthDate());
+            user.setCountry(updatedUser.getCountry());
+            user.setProfilePictureUrl(updatedUser.getProfilePictureUrl());
+            user.setRole(updatedUser.getRole());
+
+            User userSaved = userRepository.save(user);
+            return toDTO(userSaved);
+        }).orElseThrow(() -> new RuntimeException("Usuário não enconrado."));
+    }
+
+    public boolean deleteUsuario(Long id) {
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+            return true;
+        }
+        
+        return false;
     }
 
     private UserDTO toDTO(User user) {
