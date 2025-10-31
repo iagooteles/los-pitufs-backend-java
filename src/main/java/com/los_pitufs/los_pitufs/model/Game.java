@@ -11,9 +11,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 
 @Entity
 @Table(name = "games")
+@Data
 public class Game {
 
     @Id
@@ -28,7 +30,7 @@ public class Game {
     private String publisher;
     private LocalDate releaseDate;
     private String coverImageUrl;
-    private String genre;
+    private String genres;
 
     // Um jogo pode ter várias avaliações (de usuários diferentes)
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -41,5 +43,5 @@ public class Game {
         this.title = title;
         this.description = description;
     }
-    
+
 }
