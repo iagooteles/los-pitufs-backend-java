@@ -3,6 +3,7 @@ package com.los_pitufs.los_pitufs.dto;
 import java.time.LocalDate;
 
 import com.los_pitufs.los_pitufs.enums.Role;
+import com.los_pitufs.los_pitufs.model.User;
 
 public class UserDTO {
     private Long id;
@@ -15,6 +16,17 @@ public class UserDTO {
     private Role role;
 
     public UserDTO() {}
+
+    public UserDTO(User user) {
+        this.id = user.getId();
+        this.email = user.getEmail();
+        this.username = user.getUsername();
+        this.bio = user.getBio();
+        this.profilePictureUrl = user.getProfilePictureUrl();
+        this.birthDate = user.getBirthDate();
+        this.country = user.getCountry();
+        this.role = user.getRole();
+    }
 
     public UserDTO(Long id, String email, String username, String bio, String profilePictureUrl,
                    LocalDate birthDate, String country, Role role) {

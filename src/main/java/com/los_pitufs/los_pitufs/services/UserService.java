@@ -60,6 +60,13 @@ public class UserService {
         return false;
     }
 
+    // TODO: Colocar cryptografia.
+    public Optional<UserDTO> login(String email, String password) {
+        return userRepository.findByEmail(email)
+            .filter(user -> user.getPassword().equals(password))
+            .map(UserDTO::new);
+    }
+
     private UserDTO toDTO(User user) {
         UserDTO dto = new UserDTO();
         dto.setId(user.getId());
