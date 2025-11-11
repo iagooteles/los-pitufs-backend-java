@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.los_pitufs.los_pitufs.dto.UserFollowDTO;
 import com.los_pitufs.los_pitufs.model.Follow;
 import com.los_pitufs.los_pitufs.services.FollowService;
 
@@ -35,12 +36,12 @@ public class FollowController {
     }
 
     @GetMapping("/{userId}/followers")
-    public ResponseEntity<List<Follow>> getFollowers(@PathVariable Long userId) {
+    public ResponseEntity<List<UserFollowDTO>> getFollowers(@PathVariable Long userId) {
         return ResponseEntity.ok(followService.getFollowers(userId));
     }
 
     @GetMapping("/{userId}/following")
-    public ResponseEntity<List<Follow>> getFollowing(@PathVariable Long userId) {
+    public ResponseEntity<List<UserFollowDTO>> getFollowing(@PathVariable Long userId) {
         return ResponseEntity.ok(followService.getFollowing(userId));
     }
 }

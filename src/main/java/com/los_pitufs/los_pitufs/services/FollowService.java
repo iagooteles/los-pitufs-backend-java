@@ -1,9 +1,11 @@
 package com.los_pitufs.los_pitufs.services;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.los_pitufs.los_pitufs.dto.UserFollowDTO;
 import com.los_pitufs.los_pitufs.model.Follow;
 import com.los_pitufs.los_pitufs.model.User;
 import com.los_pitufs.los_pitufs.repository.FollowRepository;
@@ -53,15 +55,43 @@ public class FollowService {
         followRepository.delete(follow);
     }
 
-    public List<Follow> getFollowers(Long userId) {
+    // public List<Follow> getFollowers(Long userId) {
+    //     User user = userRepository.findById(userId)
+    //         .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+    //     return followRepository.findByFollowed(user);
+    // }
+
+    // public List<Follow> getFollowing(Long userId) {
+    //     User user = userRepository.findById(userId)
+    //         .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+    //     return followRepository.findByFollower(user);
+    // }
+
+    public List<UserFollowDTO> getFollowers(Long userId) {
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
-        return followRepository.findByFollowed(user);
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        return followRepository.findByFollowed(user)
+                .stream()
+                .map(f -> new UserFollowDTO(
+                        f.getFollower().getId(),
+                        f.getFollower().getUsername(),
+                        f.getFollower().getProfilePictureUrl()
+                ))
+                .collect(Collectors.toList());
     }
 
-    public List<Follow> getFollowing(Long userId) {
+    public List<UserFollowDTO> getFollowing(Long userId) {
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
-        return followRepository.findByFollower(user);
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        return followRepository.findByFollower(user)
+                .stream()
+                .map(f -> new UserFollowDTO(
+                        f.getFollowed().getId(),
+                        f.getFollowed().getUsername(),
+                        f.getFollowed().getProfilePictureUrl()
+                ))
+                .collect(Collectors.toList());
     }
 }
