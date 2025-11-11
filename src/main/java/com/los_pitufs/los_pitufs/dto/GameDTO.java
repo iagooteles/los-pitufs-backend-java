@@ -18,5 +18,4 @@ public class GameDTO {
     private String externalLink;
     private Double averageRating;
     private Long ratingCount;
-    private Integer releaseYear;
 }

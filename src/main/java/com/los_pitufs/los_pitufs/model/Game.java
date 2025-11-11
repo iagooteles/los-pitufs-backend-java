@@ -43,5 +43,15 @@ public class Game {
         this.title = title;
         this.description = description;
     }
-
+    
+    public Game(String title, String description, String developer, String publisher,
+                LocalDate releaseDate, String coverImageUrl, String genres) {
+        this.title = title;
+        this.description = description;
+        this.developer = developer;
+        this.publisher = publisher;
+        this.releaseDate = releaseDate;
+        this.coverImageUrl = coverImageUrl;
+        this.genres = genres;
+    }
 }
