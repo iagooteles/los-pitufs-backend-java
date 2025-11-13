@@ -7,6 +7,8 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "playlists")
 @Data
@@ -17,24 +19,24 @@ public class Playlist {
     private Long id;
 
     @NotBlank
-    private String name; // Nome da playlist (ex: "Jogando Agora", "Quero Jogar")
+    private String name;
+    
+    @Column(length = 500)
+    private String description;
 
-    private String description; // Descrição opcional da playlist
-
-    // Referência ao usuário dono da playlist
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnoreProperties({"playlists"})
     private User user;
 
-    // Relacionamento Many-to-Many com Game
     @ManyToMany
     @JoinTable(
             name = "playlist_games",
             joinColumns = @JoinColumn(name = "playlist_id"),
             inverseJoinColumns = @JoinColumn(name = "game_id")
     )
+    @JsonIgnoreProperties({"reviews"})
     private List<Game> games = new ArrayList<>();
 
-    // Construtores
     public Playlist() {}
 }
