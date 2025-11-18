@@ -5,9 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class LosPitufsApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(LosPitufsApplication.class, args);
 	}
-
 }

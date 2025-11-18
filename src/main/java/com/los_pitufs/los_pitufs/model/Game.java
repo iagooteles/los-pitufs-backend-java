@@ -31,14 +31,14 @@ public class Game {
     private String developer;
     private String publisher;
     private LocalDate releaseDate;
+
+    @Column(length = 500)
     private String coverImageUrl;
     private String genres;
 
-    // Um jogo pode ter várias avaliações (de usuários diferentes)
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews;
 
-    // Construtores, getters e setters
     public Game() {}
 
     public Game(String title, String description) {

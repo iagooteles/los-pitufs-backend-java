@@ -4,14 +4,25 @@ import com.los_pitufs.los_pitufs.dto.GameDTO;
 import com.los_pitufs.los_pitufs.model.Game;
 import com.los_pitufs.los_pitufs.repository.GameRepository;
 import jakarta.persistence.*;
-import org.springframework.stereotype.Service;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class GameService {
     private final GameRepository gameRepository;
+
+    @Value("${game.upload.dir}")
+    private String uploadDir;
+    
 
     public GameService(GameRepository gameRepository) {
         this.gameRepository = gameRepository;
@@ -29,10 +40,49 @@ public class GameService {
         return gameRepository.findById(id).map(this::toDTO);
     }
 
-    public GameDTO cadastrarJogo(Game game) {
-        Game jogoSalvo = gameRepository.save(game);
+
+    public GameDTO cadastrarJogo(GameDTO gameDTO) {
+        Game jogo = new Game();
+        jogo.setTitle(gameDTO.getTitle());
+        jogo.setDescription(gameDTO.getDescription());
+        jogo.setDeveloper(gameDTO.getDeveloper());
+        jogo.setPublisher(gameDTO.getPublisher());
+        jogo.setGenres(gameDTO.getGenres());
+        jogo.setReleaseDate(gameDTO.getReleaseDate());
+
+        // Upload de imagem
+        if (gameDTO.getCoverImage() != null && !gameDTO.getCoverImage().isEmpty()) {
+            String url = salvarArquivo(gameDTO.getCoverImage());
+            jogo.setCoverImageUrl(url);
+        }
+
+        Game jogoSalvo = gameRepository.save(jogo);
         return toDTO(jogoSalvo);
     }
+    
+private String salvarArquivo(MultipartFile file) {
+    try {
+        Path uploadPath = Paths.get(uploadDir).toAbsolutePath();
+
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        Path filePath = uploadPath.resolve(fileName);
+
+        System.out.println("Salvando arquivo em: " + filePath.toAbsolutePath()); // <--- log para verificar
+        file.transferTo(filePath.toFile());
+
+        return "/games/" + fileName; // URL pública
+    } catch (IOException e) {
+        throw new RuntimeException("Erro ao salvar a imagem do jogo", e);
+    }
+}
+
+
+
+
 
     public GameDTO atualizarJogo(Long id, Game updatedGame) {
         return gameRepository.findById(id)

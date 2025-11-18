@@ -4,6 +4,8 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
+import org.springframework.web.multipart.MultipartFile;
+
 @Data
 public class GameDTO {
     private Long id;
@@ -18,4 +20,5 @@ public class GameDTO {
     private String externalLink;
     private Double averageRating;
     private Long ratingCount;
+    private MultipartFile coverImage;
 }

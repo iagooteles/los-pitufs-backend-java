@@ -16,7 +16,6 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // A avaliação (nota) do jogo, de 1 a 10
     @NotNull
     @Min(1)
     @Max(5)
