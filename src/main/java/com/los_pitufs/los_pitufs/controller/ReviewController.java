@@ -21,14 +21,12 @@ public class ReviewController {
 
     @GetMapping("/game/{gameId}")
     public ResponseEntity<List<Review>> listarReviewsPorJogo(@PathVariable Long gameId) {
-        // Retorna a lista de entidades Review diretamente
         List<Review> reviews = reviewService.listarReviewsPorJogo(gameId);
         return ResponseEntity.ok(reviews);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Review> buscarReviewPorID(@PathVariable Long id) {
-        // Retorna a entidade Review diretamente
         Optional<Review> review = reviewService.buscarReviewPorID(id);
         return review.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -40,11 +38,9 @@ public class ReviewController {
             @RequestParam Long userId,
             @Valid @RequestBody Review review) {
         try {
-            // Retorna a entidade Review salva diretamente
             Review novaReview = reviewService.criarReview(gameId, userId, review);
             return ResponseEntity.status(HttpStatus.CREATED).body(novaReview);
         } catch (RuntimeException e) {
-            // Em um projeto real, você faria um tratamento de exceções mais específico
             return ResponseEntity.badRequest().build();
         }
     }
@@ -52,7 +48,6 @@ public class ReviewController {
     @PutMapping("/{id}")
     public ResponseEntity<Review> atualizarReview(@PathVariable Long id, @Valid @RequestBody Review review) {
         try {
-            // Retorna a entidade Review atualizada diretamente
             Review reviewAtualizada = reviewService.atualizarReview(id, review);
             return ResponseEntity.ok(reviewAtualizada);
         } catch (RuntimeException e) {

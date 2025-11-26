@@ -36,36 +36,30 @@ public class GameController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PostMapping
+    public ResponseEntity<GameDTO> cadastrarJogo(
+            @RequestParam String title,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) String developer,
+            @RequestParam(required = false) String publisher,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate releaseDate,
+            @RequestParam(required = false) String genres,
+            @RequestParam(required = false) String externalLink,
+            @RequestParam(required = false) MultipartFile coverImage
+    ) {
+        GameDTO gameDTO = new GameDTO();
+        gameDTO.setTitle(title);
+        gameDTO.setDescription(description);
+        gameDTO.setDeveloper(developer);
+        gameDTO.setPublisher(publisher);
+        gameDTO.setReleaseDate(releaseDate);
+        gameDTO.setGenres(genres);
+        gameDTO.setExternalLink(externalLink);
+        gameDTO.setCoverImage(coverImage);
 
-
-@PostMapping
-public ResponseEntity<GameDTO> cadastrarJogo(
-        @RequestParam String title,
-        @RequestParam(required = false) String description,
-        @RequestParam(required = false) String developer,
-        @RequestParam(required = false) String publisher,
-        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate releaseDate,
-        @RequestParam(required = false) String genres,
-        @RequestParam(required = false) String externalLink,
-        @RequestParam(required = false) MultipartFile coverImage
-) {
-    GameDTO gameDTO = new GameDTO();
-    gameDTO.setTitle(title);
-    gameDTO.setDescription(description);
-    gameDTO.setDeveloper(developer);
-    gameDTO.setPublisher(publisher);
-    gameDTO.setReleaseDate(releaseDate);
-    gameDTO.setGenres(genres);
-    gameDTO.setExternalLink(externalLink);
-    gameDTO.setCoverImage(coverImage);
-
-    GameDTO novoJogo = gameService.cadastrarJogo(gameDTO);
-    return ResponseEntity.status(HttpStatus.CREATED).body(novoJogo);
-}
-
-
-
-
+        GameDTO novoJogo = gameService.cadastrarJogo(gameDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(novoJogo);
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<GameDTO> atualizarJogo(@PathVariable Long id, @Valid @RequestBody Game game) {

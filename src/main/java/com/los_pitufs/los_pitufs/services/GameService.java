@@ -23,7 +23,6 @@ public class GameService {
     @Value("${game.upload.dir}")
     private String uploadDir;
     
-
     public GameService(GameRepository gameRepository) {
         this.gameRepository = gameRepository;
     }
@@ -50,7 +49,6 @@ public class GameService {
         jogo.setGenres(gameDTO.getGenres());
         jogo.setReleaseDate(gameDTO.getReleaseDate());
 
-        // Upload de imagem
         if (gameDTO.getCoverImage() != null && !gameDTO.getCoverImage().isEmpty()) {
             String url = salvarArquivo(gameDTO.getCoverImage());
             jogo.setCoverImageUrl(url);
@@ -60,29 +58,25 @@ public class GameService {
         return toDTO(jogoSalvo);
     }
     
-private String salvarArquivo(MultipartFile file) {
-    try {
-        Path uploadPath = Paths.get(uploadDir).toAbsolutePath();
+    private String salvarArquivo(MultipartFile file) {
+        try {
+            Path uploadPath = Paths.get(uploadDir).toAbsolutePath();
 
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            Path filePath = uploadPath.resolve(fileName);
+
+            System.out.println("Salvando arquivo em: " + filePath.toAbsolutePath()); // <--- log para verificar
+            file.transferTo(filePath.toFile());
+
+            return "/games/" + fileName; // URL pública
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao salvar a imagem do jogo", e);
         }
-
-        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-        Path filePath = uploadPath.resolve(fileName);
-
-        System.out.println("Salvando arquivo em: " + filePath.toAbsolutePath()); // <--- log para verificar
-        file.transferTo(filePath.toFile());
-
-        return "/games/" + fileName; // URL pública
-    } catch (IOException e) {
-        throw new RuntimeException("Erro ao salvar a imagem do jogo", e);
     }
-}
-
-
-
-
 
     public GameDTO atualizarJogo(Long id, Game updatedGame) {
         return gameRepository.findById(id)
